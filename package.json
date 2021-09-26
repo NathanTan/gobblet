@@ -1,0 +1,28 @@
+{
+  "name": "gobblet",
+  "version": "0.1.0",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel --extensions \".ts\" --presets @babel/preset-typescript ./src/* -d ./lib",
+    "start": "node lib/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NathanTan/gobblet.git"
+  },
+  "author": "Nathan Tan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NathanTan/gobblet/issues"
+  },
+  "homepage": "https://github.com/NathanTan/gobblet#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "@babel/preset-typescript": "^7.15.0",
+    "typescript": "^4.4.2"
+  }
+}
