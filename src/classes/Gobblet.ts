@@ -188,14 +188,16 @@ class Gobblet {
             return false
         
         // Check SW
-        return this.checkCupInDirection(location, color, {x: 1, y: 1})
-        // this.checkCupInDirection(location, color, {x: 0, y: 1}) ||
-        // this.checkCupInDirection(location, color, {x: 1, y: 0}) ||
+        return this.checkCupInDirection(location, color, {x: 1, y: 1}) || // SE
+            this.checkCupInDirection(location, color, {x: 0, y: 1}) || // E
+            this.checkCupInDirection(location, color, {x: 1, y: 0}) ||// S
+            this.checkCupInDirection(location, color, {x: 0, y: -1}) ||// W
+            this.checkCupInDirection(location, color, {x: 1, y: -1}) ||// SW
+
         // this.checkCupInDirection(location, color, {x: 0, y: 0}) ||
-        // this.checkCupInDirection(location, color, {x: -1, y: 1}) ||
+        this.checkCupInDirection(location, color, {x: -1, y: 1}) ||// NW
         // this.checkCupInDirection(location, color, {x: -1, y: -1}) ||
-        // this.checkCupInDirection(location, color, {x: 0, y: -1}) ||
-        // this.checkCupInDirection(location, color, {x: -1, y: 0})
+        this.checkCupInDirection(location, color, {x: -1, y: 0}) // N
 
     }
 
