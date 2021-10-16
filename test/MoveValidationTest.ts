@@ -94,29 +94,29 @@ describe('Move Validation', function () {
 
     it(`Capture is allowed`, () => {
         const gobblet = new Gobblet({debug: true})
-        gobblet.move({
+        let result = true
+        result = result && gobblet.move({
             source: null,
             destination: {x: 1, y: 1},
             size: 1,
             color: Color.white
         })
 
-        gobblet.move({
+        result = result && gobblet.move({
             source: null,
             destination: {x: 0, y: 0},
             size: 3,
             color: Color.black
         })
 
-        gobblet.move({
+        result = result && gobblet.move({
             source: null,
             destination: {x: 2, y: 2},
             size: 1,
             color: Color.white
         })
 
-        gobblet.printBoard()
-        const result = gobblet.move({
+        result = result && gobblet.move({
             source: {x: 0, y: 0},
             destination: {x: 1, y: 1},
             size: 3,
@@ -124,11 +124,6 @@ describe('Move Validation', function () {
         })
         gobblet.printBoard()
 
-
-
-        
-
-    
-        assert.strictEqual(false, result)
+        assert.strictEqual(true, result)
     })
 })

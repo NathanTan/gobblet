@@ -49,7 +49,7 @@ class Gobblet {
     move(move: Move) {
         // Check if move is valid
         if (!this.moveIsValid(move)) {
-            console.log("INVALID")
+            if (this.state.debug) console.log("[DEBUG] Invalid move")
 
             return false
         }
@@ -75,6 +75,7 @@ class Gobblet {
         // Check if game is over
 
         // True if the move was successfully executed
+        if (this.state.debug) console.log(`[DEBUG] Move() Move is completed`)
         return true
 
     }
@@ -125,7 +126,7 @@ class Gobblet {
 
             // If we car gobling a piece up
             if(shrodingersCup) {
-                if (this.state.debug) console.log(`DEBUG sourceCup - ${JSON.stringify(sourceCup)} destCup - ${JSON.stringify(shrodingersCup)}`)
+                if (this.state.debug) console.log(`[DEBUG] sourceCup - ${JSON.stringify(sourceCup)} destCup - ${JSON.stringify(shrodingersCup)}`)
                 // If there is a piece at the location, check the size
                 if (sourceCup.size > shrodingersCup.size) {
                     return true // Covering a small piece, move is valid
