@@ -5,7 +5,7 @@ interface GameState {
     cups: Array<Cup>
     turn: Color
     gameIsOver: boolean
-    winner?: string
+    winner?: Color
     debug?: boolean
 }
 

@@ -73,6 +73,7 @@ class Gobblet {
         this.state.turn = (this.state.turn === Color.white) ? Color.black : Color.white
 
         // Check if game is over
+        this.state.winner = (this.isGameOver()) ? this.state.turn : null
 
         // True if the move was successfully executed
         if (this.state.debug) console.log(`[DEBUG] Move() Move is completed`)
@@ -173,12 +174,20 @@ class Gobblet {
         }
     }
 
-    // Returns true if there is 3 in a row from a particular location else false
-    public threeInARowAtLocation = (location: Position, color: Color): boolean => {
-            
-                
-        const shrodingersCup = this.getCupAtLocation(location)
+    public isGameOver(): boolean {
+        let gameIsOver = false
+        for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 4; j++) {
+                gameIsOver = this.xInARowAtLocation({x: i, y: j}, this.state.turn, 4)
+            }
+        }
 
+        return gameIsOver
+    }
+
+    // Returns true if there is 3 in a row from a particular location else false
+    public xInARowAtLocation = (location: Position, color: Color, count: number): boolean => {
+        const shrodingersCup = this.getCupAtLocation(location)
 
         if (this.state.debug) console.log("shrodingersCup")
         if (this.state.debug) console.log(shrodingersCup)
@@ -188,14 +197,37 @@ class Gobblet {
             return false
         
         // Check SW
-        return this.checkCupInDirection(location, color, {x: 1, y: 1}) || // SE
-            this.checkCupInDirection(location, color, {x: 0, y: 1}) || // E
-            this.checkCupInDirection(location, color, {x: 1, y: 0}) || // S
-            this.checkCupInDirection(location, color, {x: 0, y: -1}) || // W
-            this.checkCupInDirection(location, color, {x: 1, y: -1}) || // SW
-            this.checkCupInDirection(location, color, {x: -1, y: 1}) || // NE
-            this.checkCupInDirection(location, color, {x: -1, y: -1}) || // NW
-            this.checkCupInDirection(location, color, {x: -1, y: 0}) // N
+        return this.checkCupInDirection(location, color, {x: 1, y: 1}, count) || // SE
+            this.checkCupInDirection(location, color, {x: 0, y: 1}, count) || // E
+            this.checkCupInDirection(location, color, {x: 1, y: 0}, count) || // S
+            this.checkCupInDirection(location, color, {x: 0, y: -1}, count) || // W
+            this.checkCupInDirection(location, color, {x: 1, y: -1}, count) || // SW
+            this.checkCupInDirection(location, color, {x: -1, y: 1}, count) || // NE
+            this.checkCupInDirection(location, color, {x: -1, y: -1}, count) || // NW
+            this.checkCupInDirection(location, color, {x: -1, y: 0}, count) // N
+
+    }
+
+    // Returns true if there is 3 in a row from a particular location else false
+    public threeInARowAtLocation = (location: Position, color: Color): boolean => {
+        const shrodingersCup = this.getCupAtLocation(location)
+
+        if (this.state.debug) console.log("shrodingersCup")
+        if (this.state.debug) console.log(shrodingersCup)
+
+        // If no cup or the wrong colored cup at location there is no 3 in a row
+        if (shrodingersCup === null || shrodingersCup.color !== color) 
+            return false
+        
+        // Check SW
+        return this.checkCupInDirection(location, color, {x: 1, y: 1}, 3) || // SE
+            this.checkCupInDirection(location, color, {x: 0, y: 1}, 3) || // E
+            this.checkCupInDirection(location, color, {x: 1, y: 0}, 3) || // S
+            this.checkCupInDirection(location, color, {x: 0, y: -1}, 3) || // W
+            this.checkCupInDirection(location, color, {x: 1, y: -1}, 3) || // SW
+            this.checkCupInDirection(location, color, {x: -1, y: 1}, 3) || // NE
+            this.checkCupInDirection(location, color, {x: -1, y: -1}, 3) || // NW
+            this.checkCupInDirection(location, color, {x: -1, y: 0}, 3) // N
 
     }
 
@@ -219,10 +251,10 @@ class Gobblet {
         }
     }
 
-    private checkCupInDirection(location: Position, color: Color, direction: Position): boolean {
+    private checkCupInDirection(location: Position, color: Color, direction: Position, count: number): boolean {
         let inspectionPoint = {...location}
         let threeInARow = false
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < count; i++) {
             if (this.state.debug) console.log(`inspectionPoint:`)
             if (this.state.debug) console.log(inspectionPoint)
             const shrodingersCup = this.getCupAtLocation(inspectionPoint)
