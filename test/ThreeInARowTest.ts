@@ -157,7 +157,23 @@ describe('Three in a row', function () {
 
             if (i < 2)
                 assert.strictEqual(false, gobblet.threeInARowAtLocation(origin, Color.white))
-            gobblet.printBoard()
+        }
+
+        assert.strictEqual(true, gobblet.threeInARowAtLocation(origin, Color.white))
+        assert.strictEqual(true, moveResults) // All moves were successfully completed
+    })
+
+    it(`Accurately describes 3 in a row in the NW direction`, () => {
+        let gobblet = new Gobblet()
+        let moveResults = true
+        const origin = {x: 2, y: 2} as Position
+
+        for (let i = 0; i < 3; i++) {
+            moveResults = moveResults && gobblet.move(MoveHelper(origin.x - i, origin.y - i, Color.white, 1))
+            moveResults = moveResults && gobblet.move(MoveHelper(origin.x - i, origin.y - i + 1, Color.black, 1))
+
+            if (i < 2)
+                assert.strictEqual(false, gobblet.threeInARowAtLocation(origin, Color.white))
         }
 
         assert.strictEqual(true, gobblet.threeInARowAtLocation(origin, Color.white))

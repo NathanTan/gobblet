@@ -93,7 +93,7 @@ describe('Move Validation', function () {
     })
 
     it(`Capture is allowed`, () => {
-        const gobblet = new Gobblet({debug: true})
+        const gobblet = new Gobblet()
         let result = true
         result = result && gobblet.move({
             source: null,
