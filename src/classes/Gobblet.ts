@@ -48,14 +48,26 @@ class Gobblet {
 
     move(move: Move) {
         // Check if move is valid
-        if (!this.moveIsValid(move))
+        if (!this.moveIsValid(move)) {
+            console.log("INVALID")
+
             return false
+        }
 
 
         // Apply move
-        this.state.cups.find(c => (c.color === move.color && 
-            c.size === move.size && 
-            c.position === move.source)).position = move.destination
+
+        // If the move comes from off the board
+        if (!move.source) {
+            this.state.cups.find(c => (c.color === move.color && 
+                c.size === move.size && 
+                c.position === move.source)).position = move.destination
+        }
+        else {
+            let c = this.state.cups.filter(cup => cup.position != null && cup.position.x === move.source.x
+                && cup.position.y === move.source.y).reduce((prev, cur) => { if (cur.size > prev.size) return cur; else return prev})
+            c.position = move.destination
+        }
 
         // Update whose turn it is
         this.state.turn = (this.state.turn === Color.white) ? Color.black : Color.white
@@ -106,17 +118,16 @@ class Gobblet {
             }
         } else {
             /* Case where the piece starts from on the board */
-            const sourceCup = this.getTopCupAtLocation(move.destination)
+            const sourceCup = this.getTopCupAtLocation(move.source)
             if (!sourceCup) return false // No source cup to capture with
 
             const shrodingersCup = this.getTopCupAtLocation(move.destination)
 
-            if (this.state.debug) console.log(`possible Cup: ${JSON.stringify(shrodingersCup)}`)
-
             // If we car gobling a piece up
             if(shrodingersCup) {
+                if (this.state.debug) console.log(`DEBUG sourceCup - ${JSON.stringify(sourceCup)} destCup - ${JSON.stringify(shrodingersCup)}`)
                 // If there is a piece at the location, check the size
-                if (sourceCup.size < shrodingersCup.size) {
+                if (sourceCup.size > shrodingersCup.size) {
                     return true // Covering a small piece, move is valid
                 } else {
                     return false // Piece in dest is too big to cover
@@ -150,10 +161,15 @@ class Gobblet {
 
     // Gets the largest cup from a location. Null is returned if no cup is there
     public getTopCupAtLocation(location: Position): Cup {
-        const possibleCup = this.state.cups.filter(cup => cup.position != null && cup.position.x === location.x
-            && cup.position.y === location.y).reduce((prev, cur) => { if (cur.size > prev.size) return cur; else return prev})
-        
-        return possibleCup ? possibleCup : null
+        try {
+            const possibleCup = this.state.cups.filter(cup => cup.position != null && cup.position.x === location.x
+                && cup.position.y === location.y).reduce((prev, cur) => { if (cur.size > prev.size) return cur; else return prev})
+                
+                return possibleCup ? possibleCup : null
+            }
+        catch (e) {
+            return null
+        }
     }
 
     // Returns true if there is 3 in a row from a particular location else false
@@ -188,10 +204,10 @@ class Gobblet {
         for (let i = 0; i < 4; i++) {
             let line = "|"
             for (let j = 0; j < 4; j++) {
-                if (this.getCupAtLocation({x: i, y: j}) === null) {
+                if (this.getTopCupAtLocation({x: i, y: j}) === null) {
                     line += "  |"
                 } else {
-                    const cup = this.getCupAtLocation({x: i, y: j})
+                    const cup = this.getTopCupAtLocation({x: i, y: j})
                     const colorForPrinting = cup.color === Color.white ? "W" : "B"
                     line += `${colorForPrinting}${cup.size}|`
                 }
