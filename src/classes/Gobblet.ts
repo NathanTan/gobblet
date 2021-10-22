@@ -5,9 +5,6 @@ import Move  from "../interfaces/Move"
 import Position from "../interfaces/Position"
 import Cup from "../interfaces/Cup"
 
-const findPieceAtLocation = (cup:  Cup, pos: Position) => {
-
-}
 
 class Gobblet {
     private state: GameState
@@ -47,9 +44,11 @@ class Gobblet {
 
 
     move(move: Move) {
+        if (this.state.debug) console.log(`[DEBUG] move: ${JSON.stringify(move)}`)
+
         // Check if move is valid
         if (!this.moveIsValid(move)) {
-            if (this.state.debug) console.log("[DEBUG] Invalid move")
+            if (this.state.debug) console.log(`[DEBUG] Invalid move: ${JSON.stringify(move)}`)
 
             return false
         }
@@ -178,7 +177,10 @@ class Gobblet {
         let gameIsOver = false
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 4; j++) {
-                gameIsOver = this.xInARowAtLocation({x: i, y: j}, this.state.turn, 4)
+                gameIsOver = this.xInARowAtLocation({x: i, y: j}, Color.white, 4)
+                if (gameIsOver) return true
+                gameIsOver = this.xInARowAtLocation({x: i, y: j}, Color.black, 4)
+                if (gameIsOver) return true
             }
         }
 
@@ -188,9 +190,8 @@ class Gobblet {
     // Returns true if there is 3 in a row from a particular location else false
     public xInARowAtLocation = (location: Position, color: Color, count: number): boolean => {
         const shrodingersCup = this.getCupAtLocation(location)
-
-        if (this.state.debug) console.log("shrodingersCup")
-        if (this.state.debug) console.log(shrodingersCup)
+        if (this.state.debug) console.log(`[DEBUG] Checking for ${count} in a row from position ${JSON.stringify(location)}`)
+        
 
         // If no cup or the wrong colored cup at location there is no 3 in a row
         if (shrodingersCup === null || shrodingersCup.color !== color) 
@@ -255,13 +256,12 @@ class Gobblet {
         let inspectionPoint = {...location}
         let threeInARow = false
         for (let i = 0; i < count; i++) {
-            if (this.state.debug) console.log(`inspectionPoint:`)
-            if (this.state.debug) console.log(inspectionPoint)
-            const shrodingersCup = this.getCupAtLocation(inspectionPoint)
-            if (!shrodingersCup)
+            const shrodingersCup = this.getTopCupAtLocation(inspectionPoint)
+
+            // Return null if we stop seeing cups or the top cup is the wrong color.
+            if (!shrodingersCup || (shrodingersCup === null || shrodingersCup.color !== color))
                 return false
-            if (shrodingersCup === null || shrodingersCup.color !== color) 
-                threeInARow = false || threeInARow
+            
             inspectionPoint.x += direction.x
             inspectionPoint.y += direction.y
             threeInARow = true || threeInARow
