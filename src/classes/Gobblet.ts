@@ -108,8 +108,7 @@ class Gobblet {
                 // If there is a piece at the location, check the size
                 if (move.size > shrodingersCup.size) {
                     /* Special Case: Covering another piece here is only allowed if there is 3 in a row */
-                    // return this.threeInARowAtLocation(move.destination, move.color, 0)
-                    return true
+                    return this.xInARowAtLocation(move.destination, this.getOppositeColor(move.color), 3)
                 } else {
                     return false // Piece in dest is too big to cover
                 }
@@ -124,7 +123,7 @@ class Gobblet {
 
             const shrodingersCup = this.getTopCupAtLocation(move.destination)
 
-            // If we car gobling a piece up
+            // If we are gobling a piece up
             if(shrodingersCup) {
                 if (this.state.debug) console.log(`[DEBUG] sourceCup - ${JSON.stringify(sourceCup)} destCup - ${JSON.stringify(shrodingersCup)}`)
                 // If there is a piece at the location, check the size
@@ -138,6 +137,12 @@ class Gobblet {
                 return true // No Piece in destination, move is valid
             }
         }
+    }
+
+    private getOppositeColor(color: Color): Color {
+        if (color === Color.white)
+            return Color.black
+        return Color.white
     }
 
     public getTurn() {
@@ -189,8 +194,8 @@ class Gobblet {
 
     // Returns true if there is 3 in a row from a particular location else false
     public xInARowAtLocation = (location: Position, color: Color, count: number): boolean => {
-        const shrodingersCup = this.getCupAtLocation(location)
-        if (this.state.debug) console.log(`[DEBUG] Checking for ${count} in a row from position ${JSON.stringify(location)}`)
+        const shrodingersCup = this.getTopCupAtLocation(location)
+        if (this.state.debug) console.log(`[DEBUG] Checking for ${count} in a row from position ${JSON.stringify(location)}, color: ${color}`)
         
 
         // If no cup or the wrong colored cup at location there is no 3 in a row
@@ -257,6 +262,8 @@ class Gobblet {
         let threeInARow = false
         for (let i = 0; i < count; i++) {
             const shrodingersCup = this.getTopCupAtLocation(inspectionPoint)
+
+            if (this.state.debug) console.log(`[DEBUG] checking ${JSON.stringify(inspectionPoint)} from location ${JSON.stringify(location)}, count: ${count}`)
 
             // Return null if we stop seeing cups or the top cup is the wrong color.
             if (!shrodingersCup || (shrodingersCup === null || shrodingersCup.color !== color))

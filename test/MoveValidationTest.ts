@@ -2,6 +2,7 @@ var assert = require('assert')
 
 import Gobblet from "../src/classes/Gobblet"
 import Color from "../src/enums/Color"
+import MoveHelper from "./MoveHelper"
 
 describe('Move Validation', function () {
     it(`Prevents Black from moving first`, () => {
@@ -125,5 +126,57 @@ describe('Move Validation', function () {
         gobblet.printBoard()
 
         assert.strictEqual(true, result)
+    })
+
+    it(`Allows for capture from off the board when 3 in a row.`, () => {
+        const config = { debug: false }
+        let gobblet = new Gobblet(config)
+        let moveResults = true
+
+        // Check if the game is over
+        assert.strictEqual(false, gobblet.isGameOver())
+
+        moveResults = moveResults && gobblet.move(MoveHelper(0, 0, Color.white, 1))
+        moveResults = moveResults && gobblet.move(MoveHelper(1, 0, Color.black, 3))
+
+        // Check if the game is over
+        assert.strictEqual(false, gobblet.isGameOver())
+
+        moveResults = moveResults && gobblet.move(MoveHelper(1, 1, Color.white, 1))
+        moveResults = moveResults && gobblet.move(MoveHelper(0, 1, Color.black, 1))
+
+        // Check if the game is over
+        assert.strictEqual(false, gobblet.isGameOver())
+
+        moveResults = moveResults && gobblet.move(MoveHelper(2, 2, Color.white, 1))
+        moveResults = moveResults && gobblet.move(MoveHelper(2, 2, Color.black, 3))
+
+        gobblet.printBoard()
+        // Check if the game is over
+        // assert.strictEqual(false, gobblet.isGameOver())
+
+        moveResults = moveResults && gobblet.move(MoveHelper(3, 3, Color.white, 2))
+
+        // Check if the game is over
+        // assert.strictEqual(false, gobblet.isGameOver())
+        assert.strictEqual(true, moveResults) // All moves were successfully completed
+    })
+
+    it(`Does not allow for capture from off the board when not 3 in a row.`, () => {
+        const config = { debug: false }
+        let gobblet = new Gobblet(config)
+        let moveResults = true
+
+        // Check if the game is over
+        assert.strictEqual(false, gobblet.isGameOver())
+
+        moveResults = moveResults && gobblet.move(MoveHelper(0, 0, Color.white, 1))
+        gobblet.printBoard()
+        moveResults = moveResults && gobblet.move(MoveHelper(0, 0, Color.black, 3))
+        gobblet.printBoard()
+
+        // Check if the game is over
+        assert.strictEqual(false, gobblet.isGameOver())
+        assert.strictEqual(false, moveResults) // All moves were successfully completed
     })
 })
