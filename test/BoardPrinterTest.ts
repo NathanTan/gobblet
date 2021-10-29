@@ -6,7 +6,7 @@ import Color from "../src/enums/Color"
 describe('Board Printer', function () {
     it(`Displays the board with a starting position from white's perspective.`, () => {
         let gobblet = new Gobblet()
-        gobblet.printBoard()
+        // gobblet.printBoard()
         gobblet.move({
             source: null,
             destination: {x: 1, y: 1},
@@ -14,7 +14,7 @@ describe('Board Printer', function () {
             color: Color.white
         })
 
-        gobblet.printBoard()
+        // gobblet.printBoard()
         
         gobblet.move({
             source: null,
@@ -28,6 +28,6 @@ describe('Board Printer', function () {
             size: 1,
             color: Color.white
         })
-        gobblet.printBoard()
+        // gobblet.printBoard()
     })
 })

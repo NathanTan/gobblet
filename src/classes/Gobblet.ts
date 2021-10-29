@@ -75,7 +75,7 @@ class Gobblet {
         this.state.winner = (this.isGameOver()) ? this.state.turn : null
 
         // True if the move was successfully executed
-        if (this.state.debug) console.log(`[DEBUG] Move() Move is completed`)
+        if (this.state.debug) console.log(`[DEBUG] Move() Move is completed. Game is over: ${this.isGameOver}`)
         return true
 
     }
@@ -107,6 +107,13 @@ class Gobblet {
             if(shrodingersCup) {
                 // If there is a piece at the location, check the size
                 if (move.size > shrodingersCup.size) {
+
+                    // Allow users to cover their own pieces from off the board
+                    if (move.color === shrodingersCup.color) 
+                        return true
+
+
+
                     /* Special Case: Covering another piece here is only allowed if there is 3 in a row */
                     return this.xInARowAtLocation(move.destination, this.getOppositeColor(move.color), 3)
                 } else {

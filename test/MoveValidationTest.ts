@@ -123,9 +123,45 @@ describe('Move Validation', function () {
             size: 3,
             color: Color.black
         })
-        gobblet.printBoard()
 
         assert.strictEqual(true, result)
+    })
+
+    // TODO: Need to check if this is actually allowed and if so, is it allowed from off the board without 3 in a row?
+    it(`Capture is allowed of the same color`, () => {
+        const config = { debug: false }
+        let gobblet = new Gobblet(config)
+        let moveResults = true
+
+        // Check if the game is over
+        assert.strictEqual(false, gobblet.isGameOver())
+
+        moveResults = moveResults && gobblet.move(MoveHelper(0, 0, Color.white, 1))
+        moveResults = moveResults && gobblet.move(MoveHelper(0, 1, Color.black, 3))
+
+        moveResults = moveResults && gobblet.move(MoveHelper(0, 0, Color.white, 2))
+
+        // Check if the game is over
+        assert.strictEqual(false, gobblet.isGameOver())
+        assert.strictEqual(true, moveResults)
+    })
+
+    it(`Capture is not allowed if cups are the same size`, () => {
+        const config = { debug: false }
+        let gobblet = new Gobblet(config)
+        let moveResults = true
+
+        // Check if the game is over
+        assert.strictEqual(false, gobblet.isGameOver())
+
+        moveResults = moveResults && gobblet.move(MoveHelper(0, 0, Color.white, 1))
+        moveResults = moveResults && gobblet.move(MoveHelper(0, 1, Color.black, 3))
+
+        moveResults = moveResults && gobblet.move(MoveHelper(0, 0, Color.white, 1))
+
+        // Check if the game is over
+        assert.strictEqual(false, gobblet.isGameOver())
+        assert.strictEqual(false, moveResults)
     })
 
     it(`Allows for capture from off the board when 3 in a row.`, () => {
@@ -151,7 +187,6 @@ describe('Move Validation', function () {
         moveResults = moveResults && gobblet.move(MoveHelper(2, 2, Color.white, 1))
         moveResults = moveResults && gobblet.move(MoveHelper(2, 2, Color.black, 3))
 
-        gobblet.printBoard()
         // Check if the game is over
         // assert.strictEqual(false, gobblet.isGameOver())
 
@@ -171,9 +206,7 @@ describe('Move Validation', function () {
         assert.strictEqual(false, gobblet.isGameOver())
 
         moveResults = moveResults && gobblet.move(MoveHelper(0, 0, Color.white, 1))
-        gobblet.printBoard()
         moveResults = moveResults && gobblet.move(MoveHelper(0, 0, Color.black, 3))
-        gobblet.printBoard()
 
         // Check if the game is over
         assert.strictEqual(false, gobblet.isGameOver())
