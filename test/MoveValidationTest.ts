@@ -160,9 +160,7 @@ describe('Move Validation', function () {
         moveResults = moveResults && gobblet.move(MoveHelper(1, 1, Color.white, 2))
         moveResults = moveResults && gobblet.move(MoveHelper(0, 2, Color.black, 3))
 
-        gobblet.printBoard()
         moveResults = moveResults && gobblet.move(MoveHelper(1, 1, Color.white, 3, 0, 0))
-        gobblet.printBoard()
 
         // Check if the game is over
         assert.strictEqual(false, gobblet.isGameOver())
