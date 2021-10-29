@@ -112,8 +112,6 @@ class Gobblet {
                     if (move.color === shrodingersCup.color) 
                         return true
 
-
-
                     /* Special Case: Covering another piece here is only allowed if there is 3 in a row */
                     return this.xInARowAtLocation(move.destination, this.getOppositeColor(move.color), 3)
                 } else {

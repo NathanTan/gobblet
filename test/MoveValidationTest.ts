@@ -127,8 +127,7 @@ describe('Move Validation', function () {
         assert.strictEqual(true, result)
     })
 
-    // TODO: Need to check if this is actually allowed and if so, is it allowed from off the board without 3 in a row?
-    it(`Capture is allowed of the same color`, () => {
+    it(`Capture is allowed of the same color from off the board`, () => {
         const config = { debug: false }
         let gobblet = new Gobblet(config)
         let moveResults = true
@@ -140,6 +139,30 @@ describe('Move Validation', function () {
         moveResults = moveResults && gobblet.move(MoveHelper(0, 1, Color.black, 3))
 
         moveResults = moveResults && gobblet.move(MoveHelper(0, 0, Color.white, 2))
+
+        // Check if the game is over
+        assert.strictEqual(false, gobblet.isGameOver())
+        assert.strictEqual(true, moveResults)
+    })
+
+    // TODO: Fix this test to check for the number of pieces on the board to make sure it is equal to 3
+    it(`Capture is allowed of the same color from on the board`, () => {
+        const config = { debug: false }
+        let gobblet = new Gobblet(config)
+        let moveResults = true
+
+        // Check if the game is over
+        assert.strictEqual(false, gobblet.isGameOver())
+
+        moveResults = moveResults && gobblet.move(MoveHelper(0, 0, Color.white, 3))
+        moveResults = moveResults && gobblet.move(MoveHelper(0, 1, Color.black, 3))
+
+        moveResults = moveResults && gobblet.move(MoveHelper(1, 1, Color.white, 2))
+        moveResults = moveResults && gobblet.move(MoveHelper(0, 2, Color.black, 3))
+
+        gobblet.printBoard()
+        moveResults = moveResults && gobblet.move(MoveHelper(1, 1, Color.white, 3, 0, 0))
+        gobblet.printBoard()
 
         // Check if the game is over
         assert.strictEqual(false, gobblet.isGameOver())
