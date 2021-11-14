@@ -1,4 +1,4 @@
-import { GameState} from "../interfaces/GameState"
+import { GameState } from "../interfaces/GameState"
 import Size from "../enums/Size"
 import Color from "../enums/Color"
 import Move  from "../interfaces/Move"
@@ -153,8 +153,6 @@ class Gobblet {
     public getTurn() {
         return this.state.turn
     }
-
-
 
     // Gets a cup from a location. Null is returned if no cup is there
     public getCupAtLocation(location: Position): Cup {
